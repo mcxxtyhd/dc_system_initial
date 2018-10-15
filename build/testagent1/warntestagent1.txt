@@ -1,0 +1,17 @@
+missing module named resource - imported by posix, D:\pythonProject\testagent1.py
+missing module named posix - imported by os, D:\pythonProject\testagent1.py
+missing module named _posixsubprocess - imported by subprocess, D:\pythonProject\testagent1.py
+missing module named 'org.python' - imported by pickle, D:\pythonProject\testagent1.py, xml.sax
+missing module named readline - imported by cmd, code, pdb, D:\pythonProject\testagent1.py
+excluded module named _frozen_importlib - imported by importlib, importlib.abc, D:\pythonProject\testagent1.py
+missing module named _frozen_importlib_external - imported by importlib._bootstrap, importlib, importlib.abc, D:\pythonProject\testagent1.py
+missing module named _winreg - imported by platform, D:\pythonProject\testagent1.py
+missing module named _scproxy - imported by urllib.request
+missing module named java - imported by platform, D:\pythonProject\testagent1.py
+missing module named 'java.lang' - imported by platform, D:\pythonProject\testagent1.py, xml.sax._exceptions
+missing module named vms_lib - imported by platform, D:\pythonProject\testagent1.py
+missing module named termios - imported by tty, getpass, D:\pythonProject\testagent1.py
+missing module named grp - imported by shutil, tarfile, D:\pythonProject\testagent1.py
+missing module named pwd - imported by posixpath, shutil, tarfile, http.server, webbrowser, netrc, getpass, D:\pythonProject\testagent1.py
+missing module named _dummy_threading - imported by dummy_threading, D:\pythonProject\testagent1.py
+missing module named org - imported by copy, D:\pythonProject\testagent1.py

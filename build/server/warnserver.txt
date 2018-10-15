@@ -1,0 +1,18 @@
+missing module named resource - imported by posix, D:\pythonProject\server.py
+missing module named posix - imported by os, D:\pythonProject\server.py
+missing module named _posixsubprocess - imported by subprocess, D:\pythonProject\server.py
+missing module named 'org.python' - imported by pickle, D:\pythonProject\server.py, xml.sax
+missing module named readline - imported by cmd, code, pdb, D:\pythonProject\server.py
+excluded module named _frozen_importlib - imported by importlib, importlib.abc, D:\pythonProject\server.py
+missing module named _frozen_importlib_external - imported by importlib._bootstrap, importlib, importlib.abc, D:\pythonProject\server.py
+missing module named _winreg - imported by platform, D:\pythonProject\server.py
+missing module named _scproxy - imported by urllib.request
+missing module named java - imported by platform, D:\pythonProject\server.py
+missing module named 'java.lang' - imported by platform, D:\pythonProject\server.py, xml.sax._exceptions
+missing module named vms_lib - imported by platform, D:\pythonProject\server.py
+missing module named termios - imported by tty, D:\pythonProject\server.py, getpass
+missing module named _threading - imported by socketserver, D:\pythonProject\server.py
+missing module named grp - imported by shutil, tarfile, D:\pythonProject\server.py
+missing module named org - imported by copy, D:\pythonProject\server.py
+missing module named pwd - imported by posixpath, shutil, tarfile, http.server, webbrowser, D:\pythonProject\server.py, netrc, getpass
+missing module named _dummy_threading - imported by dummy_threading, D:\pythonProject\server.py

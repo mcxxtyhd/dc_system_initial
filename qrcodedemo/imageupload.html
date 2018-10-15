@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="templates\jquery-3.3.1.min.js"></script>
+    <title>影像学图片上传</title>
+    <script type="text/javascript">
+        function uploadPic() {
+        var form = document.getElementById('upload'),
+                formData = new FormData(form);
+        $.ajax({
+            url:"http://192.168.11.160:5002/up_file",
+            type:"post",
+            data:formData,
+            processData:false,
+            contentType:false,
+            success:function(res){
+                console.log(res);
+                $("#pic").val("");
+                $(".showUrl").html(res);
+                $(".showPic").attr("src",res);
+				alert("上传成功！");
+            },
+            error:function(err){
+                alert("网络连接失败,稍后重试",err);
+            }
+ 
+        })
+ 
+    };
+	$(document).ready(function(){
+		$('#my-img').click(function(){
+			$('#pic').click();
+		});
+
+	});
+	
+	function change(files) {	
+		for (var i = 0; i < files.length; i++) {
+				var fileName = files[i].name;
+				var img = document.createElement("img");
+				img.width = 800
+				img.setAttribute("height", "auto");
+				img.setAttribute("max-width", "800");
+				img.src = window.URL.createObjectURL(files[i]);
+				var preview = document.getElementById("previewImg")
+				preview.appendChild(img)
+			}
+	};
+    </script>
+	<style>
+		.head-img{
+			text-align: left;
+		}
+		
+		#pic{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+   <form id="upload" enctype="multipart/form-data" method="post">
+	   <span style="font-size:100px;">选择图片</span>
+	   <br>
+	   <br>
+
+		<div class="head-img">
+			<input type="button" style="height:100px;width:300px;font-size: 50px;" value="选择图片" id="my-img"/>        
+		</div>
+		<input type="file" name="file" accept="image/*"  onchange="change(this.files);" multiple id="pic"/>
+
+		<br>
+
+		<div id="previewImg">
+		</div>
+		<br>
+
+		<input type="button" style="height:100px;width:200px;font-size: 50px;" value="提交" onclick="uploadPic();"/>
+	</form>
+	
+</body>
+</html>

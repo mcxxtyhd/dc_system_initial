@@ -6,12 +6,10 @@ import sys
 import time
 import traceback
 
-from util.getlocalhostAddress import getlocaladdress
-
 app = Flask(__name__)
 
 # 获得本机ip
-local_address = '192.168.84.1'
+local_address = '192.168.11.117'
 
 theo = agent(local_address, '1434', 'dc_system', 'sa', '123')
 

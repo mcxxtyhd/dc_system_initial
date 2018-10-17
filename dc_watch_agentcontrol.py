@@ -8,8 +8,8 @@ from util.getlocalhostAddress import getlocaladdress
 # 获得本机ip
 local_address = getlocaladdress()
 
-# 初始化控件放在服务器的地址
-target_agent_address = "C:/TheoTestShell"
+# 服务器地址
+server_address='192.168.11.117:5001'
 
 # 循环检测以及重连的间隔时间
 time_load=5
@@ -22,7 +22,7 @@ while True:
             # 捏造参数，为了让服务器知道访问的IP是多少
             param_get={'agent_address':str(local_address)}
             # 制定的wepapi地址
-            url_get = 'http://192.168.84.1:5001/getAgentAction'
+            url_get = 'http://'+str(server_address)+'/getAgentAction'
             # 携带参数调用api
             result_get = requests.post(url_get,data=param_get)
             # 获得当前地址的控件信息
@@ -53,7 +53,7 @@ while True:
             # 捏造参数，为了让服务器知道访问的IP是多少
             param_agent = {'agent_address': str(local_address)}
             # 制定的wepapi地址
-            url_agent = 'http://192.168.84.1:5001/postAgentReactDone'
+            url_agent = 'http://'+str(server_address)+'/postAgentReactDone'
             # 携带参数调用api
             result_react = requests.post(url_agent, data=param_agent)
 

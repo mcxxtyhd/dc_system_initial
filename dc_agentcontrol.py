@@ -16,7 +16,12 @@ local_address = getlocaladdress()
 compute_name=socket.getfqdn(socket.gethostname())
 
 # 初始化控件放在服务器的地址
-target_agent_address = "C:/TheoTestShell"
+target_agent_address = "C:/dc_system/packages"
+
+# 文件服务器地址
+fileserver_address='192.168.11.117:5000'
+# 服务器地址
+server_address='192.168.11.117:5001'
 
 # 循环检测以及重连的间隔时间
 time_load=5
@@ -27,7 +32,7 @@ while True:
         # 捏造参数，为了让服务器知道访问的IP是多少
         param_init={'agent_address':str(local_address),'agent_name': str(compute_name)}
         # 制定的wepapi地址
-        url_init = 'http://192.168.84.1:5001/initAgentPluginsSituation'
+        url_init = 'http://'+str(server_address)+'/initAgentPluginsSituation'
         # 携带参数调用api
         result_init = requests.post(url_init,data=param_init)
 
@@ -38,7 +43,7 @@ while True:
             # 捏造参数，为了让服务器知道访问的IP是多少
             param_get={'agent_address':str(local_address)}
             # 制定的wepapi地址
-            url_get = 'http://192.168.84.1:5001/getAgentPluginsSituation'
+            url_get = 'http://'+str(server_address)+'/getAgentPluginsSituation'
             # 携带参数调用api
             result_get = requests.post(url_get,data=param_get)
             # 获得当前地址的控件信息
@@ -47,14 +52,14 @@ while True:
                 for plugin in plugins_update:
 
                     # 更新下载控件的方法
-                    fc = FileDownClass('http://192.168.84.1:5000/' + str(plugin), "C:\\TheoTestShell", plugin)
+                    fc = FileDownClass('http://'+str(fileserver_address)+'/' + str(plugin), target_agent_address, plugin)
                     fc.execute()
                     print('plugin of '+str(plugin)+' update successfully!')
 
                 # 之后调用另外一个接口对该agent的数据进行更改
                 update_param = {'agent_address':str(local_address),'update_plugins': str(plugins_update)}
                 # 制定的wepapi地址
-                url_update = 'http://192.168.84.1:5001/updateAgentPluginsSituation'
+                url_update = 'http://'+str(server_address)+'/updateAgentPluginsSituation'
                 # 携带参数调用api
                 result_update = requests.post(url_update, data=update_param)
             else:
@@ -66,14 +71,14 @@ while True:
             # 捏造参数，为了让服务器知道访问的IP是多少
             param_config_plugin_react = {'agent_address': str(local_address)}
             # 制定的wepapi地址
-            url_config_plugin_react = 'http://192.168.84.1:5001/postTargetPluginReactDone'
+            url_config_plugin_react = 'http://'+str(server_address)+'/postTargetPluginReactDone'
             # 携带参数调用api
             result_config_plugin_react = requests.post(url_config_plugin_react, data=param_config_plugin_react)
 
             # *****************************    2.1、检查是否需要更新配置文件       *************************************
             config_param={'agent_address':str(local_address)}
             # 指定的wepapi地址
-            url_config = 'http://192.168.84.1:5001/getPluginConfig'
+            url_config = 'http://'+str(server_address)+'/getPluginConfig'
             # 携带参数调用api
             result_configs = requests.post(url_config, data=config_param)
             # 获得当前地址的控件信息
@@ -99,7 +104,7 @@ while True:
                 config_update_param = {'agent_address': str(target_update_config)}
 
                 # 指定的wepapi地址
-                url_update_config = 'http://192.168.84.1:5001/updatePluginConfig'
+                url_update_config = 'http://'+str(server_address)+'/updatePluginConfig'
                 # 携带参数调用api
                 result_update_configs = requests.post(url_update_config, data=config_update_param)
 
@@ -108,7 +113,7 @@ while True:
             # *****************************    2.2、检查是否需要更新配置文件       *************************************
             manual_param = {'agent_address': str(local_address)}
             # 指定的wepapi地址
-            url_config_manualupdate = 'http://192.168.84.1:5001/getConfigManualUpdateData'
+            url_config_manualupdate = 'http://'+str(server_address)+'/getConfigManualUpdateData'
             # 携带参数调用api
             result_config_manualupdate = requests.post(url_config_manualupdate, data=manual_param)
             # 获得当前地址的控件信息
@@ -132,7 +137,7 @@ while True:
             # *****************************    2.3、配置文件 客户端响应完毕      *************************************
             config_connect_param = {'agent_address': str(local_address)}
             # 指定的wepapi地址
-            url_config_connect = 'http://192.168.84.1:5001/postConfigReactDone'
+            url_config_connect = 'http://'+str(server_address)+'/postConfigReactDone'
             # 携带参数调用api
             result_config_connect = requests.post(url_config_connect, data=config_connect_param)
 
@@ -140,7 +145,7 @@ while True:
             # 之后调用另外一个接口对该agent的数据进行更改
             actions_param = {'agent_address':str(local_address)}
             # 指定的wepapi地址
-            url_update = 'http://192.168.84.1:5001/getAgentPluginsAction'
+            url_update = 'http://'+str(server_address)+'/getAgentPluginsAction'
             # 携带参数调用api
             result_actions = requests.post(url_update, data=actions_param)
             # 获得当前地址的控件信息
@@ -172,7 +177,7 @@ while True:
             # 之后调用另外一个接口对该agent的数据进行更改
             task_situation_param = {'agent_address': str(local_address), 'tasks_list': str(tasks_status_list)}
             # 指定的wepapi地址
-            url_all_tasks_list = 'http://192.168.84.1:5001/postAgentTaskPlugins'
+            url_all_tasks_list = 'http://'+str(server_address)+'/postAgentTaskPlugins'
             # 携带参数调用api
             result_task_situation = requests.post(url_all_tasks_list, data=task_situation_param)
 
@@ -181,7 +186,7 @@ while True:
             # 之后调用另外一个接口对该agent的数据进行更改
             agent_updatetime_address = {'agent_address': str(local_address)}
             # 指定的wepapi地址
-            url_updatetime = 'http://192.168.84.1:5001/updateAgentRequestTime'
+            url_updatetime = 'http://'+str(server_address)+'/updateAgentRequestTime'
             # 携带参数调用api
             result_agent_updatetime = requests.post(url_updatetime, data=agent_updatetime_address)
 

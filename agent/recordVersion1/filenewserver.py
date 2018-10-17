@@ -15,6 +15,7 @@ def setup_routes(app):
 try:
     # 获得本机ip
     local_address = getlocaladdress()
+    print(local_address)
     app = web.Application()
     setup_routes(app)
     web.run_app(app, host=local_address, port=5000)

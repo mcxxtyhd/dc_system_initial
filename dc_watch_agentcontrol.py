@@ -1,15 +1,34 @@
 import os
+import re
+import socket
 import time
 import requests
 
-from internetProgramming.FileDownClass import FileDownClass
-from util.getlocalhostAddress import getlocaladdress
+from util.getFileTargetConfigContent import getFileTargetConfigContent
+
+
+def getlocaladdress(match_rule):
+    # 下方代码为获取当前主机IPV4 和IPV6的所有IP地址(所有系统均通用)
+    addrs = socket.getaddrinfo(socket.gethostname(),None)
+
+    addressList='url:,'
+    for item in addrs:
+        addressList+=str(item[4][0])+','
+
+    reg = r',('+match_rule+'),'
+    imgre = re.compile(reg)
+    imglist = re.findall(imgre, addressList)
+
+    return imglist[0]
+
+# 获取本机IP的正则表达式
+match_rule = getFileTargetConfigContent('dc_system_agent.config', 'netgateRe=')
 
 # 获得本机ip
-local_address = getlocaladdress()
+local_address = getlocaladdress(match_rule)
 
 # 服务器地址
-server_address='192.168.11.117:5001'
+server_address=str(getFileTargetConfigContent('dc_system_agent.config', 'server_address='))+':'+str(getFileTargetConfigContent('dc_system_agent.config', 'server_control_port='))
 
 # 循环检测以及重连的间隔时间
 time_load=5

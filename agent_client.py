@@ -79,10 +79,9 @@ class agent:
         self.session.commit()
 
     # 拿到制定客户端地址的控件更新动作信息
-    def get_agent_plugins_action(self, agent_address):
+    def get_agent_plugins_action(self, agent_address,target_agent_address):
         dict = {}
-        # 初始化控件放在服务器的地址
-        target_agent_address = "C:/TheoTestShell"
+
         # 1、先是拿到该地址的所有控件
         all_plugins=self.session.query(dc_pluginsituation).join(dc_agent).filter(dc_agent.dc_agent_address==agent_address).all()
 
@@ -254,7 +253,6 @@ class agent:
                     print('find target task')
                     single_service.dc_pluginsituation_service_status = 'on'
                 else:
-                    print('没有找到')
                     single_service.dc_pluginsituation_service_status = 'off'
 
                 single_service.dc_pluginsituation_service_ServerStatus = 'no'

@@ -9,7 +9,7 @@ def getlocaladdress():
     for item in addrs:
         addressList+=str(item[4][0])+','
 
-    reg = r',(192.168.11.[0-9]{1,3}),'
+    reg = r',(192.168.13.[0-9]{1,3}),'
     imgre = re.compile(reg)
     imglist = re.findall(imgre, addressList)
 

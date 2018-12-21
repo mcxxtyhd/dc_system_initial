@@ -6,12 +6,22 @@ import sys
 import time
 import traceback
 
+from util.getFileTargetConfigContent import getFileTargetConfigContent
+
 app = Flask(__name__)
 
-# 获得本机ip
-local_address = '192.168.11.117'
+# 从配置文件获取对应的网关正则表达式信息
+local_address = getFileTargetConfigContent('server.config', 'localhost_address=')
+# 获取数据库相关信息
+databasename=getFileTargetConfigContent('server.config', 'databasename=')
+databaseport=getFileTargetConfigContent('server.config', 'databaseport=')
+databaseuser=getFileTargetConfigContent('server.config', 'databaseuser=')
+databasepassword=getFileTargetConfigContent('server.config', 'databasepassword=')
+# 控件放在服务器的地址
+target_agent_address = getFileTargetConfigContent('server.config', 'download_path=')
+server_control_port = getFileTargetConfigContent('server.config', 'server_control_port=')
 
-theo = agent(local_address, '1434', 'dc_system', 'sa', '123')
+theo = agent(local_address,databaseport,databasename,databaseuser,databasepassword)
 
 # 1.1 初始化客户端的控件情况数据
 @app.route("/initAgentPluginsSituation", methods=["POST"])
@@ -106,7 +116,7 @@ def get_agent_plugin_situation_action():
     # 拿到访问的ip
     agent_address=str(request.form.get("agent_address"))
 
-    agent_actions=theo.get_agent_plugins_action(agent_address)
+    agent_actions=theo.get_agent_plugins_action(agent_address,target_agent_address)
     return jsonify({"data": agent_actions})
 
 # 4.1 获得客户端所有的进程名称
@@ -156,7 +166,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            app.run(host=local_address, port=5001)
+            app.run(host=local_address, port=int(server_control_port))
         except Exception:
             print('**************错误信息 开始**************')
             exc_type, exc_value, exc_traceback = sys.exc_info()

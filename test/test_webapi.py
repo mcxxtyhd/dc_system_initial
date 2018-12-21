@@ -14,12 +14,16 @@ app = Flask(__name__)
 local_address = '192.168.11.229'
 
 # 1.1 初始化客户端的控件情况数据
-@app.route("/getTest", methods=["POST"])
+@app.route("/getTest", methods=["Post"])
 def init_agent_plugin_situation():
     # 拿到访问的ip
     # agent_address = str(request.form.get("agent_address"))
-    test_id = str(request.args.get("userid"))
-    test_funcname = str(request.args.get("funcname"))
+    test_json=request.get_json()
+
+    print('here is the json data:'+str(test_json))
+
+    test_id = str(request.form.get("userid"))
+    test_funcname = str(request.form.get("funcname"))
 
     if test_id=='33':
         if test_funcname=='mytest':

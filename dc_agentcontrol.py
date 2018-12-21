@@ -1,27 +1,41 @@
 import os
+import re
 import sys
 import time
 import traceback
-
 import requests
 
 from internetProgramming.FileDownClass import FileDownClass
 from util.checkTaskStatus import getAllTaskNames
-from util.getlocalhostAddress import getlocaladdress
 import socket
 
-# 获得本机ip
-local_address = getlocaladdress()
+from util.getFileTargetConfigContent import getFileTargetConfigContent
+
+def getlocaladdress(match_rule):
+    # 下方代码为获取当前主机IPV4 和IPV6的所有IP地址(所有系统均通用)
+    addrs = socket.getaddrinfo(socket.gethostname(),None)
+
+    addressList='url:,'
+    for item in addrs:
+        addressList+=str(item[4][0])+','
+
+    reg = r',('+match_rule+'),'
+    imgre = re.compile(reg)
+    imglist = re.findall(imgre, addressList)
+    return imglist[0]
+
+# 从配置文件获取控件放在服务器的地址
+target_agent_path = str(getFileTargetConfigContent('dc_system_agent.config', 'target_agent_path='))
+# 文件服务器地址
+fileserver_address=str(getFileTargetConfigContent('dc_system_agent.config', 'file_address='))+':'+str(getFileTargetConfigContent('dc_system_agent.config', 'file_server_port='))
+# 服务器地址
+server_address=str(getFileTargetConfigContent('dc_system_agent.config', 'server_address='))+':'+str(getFileTargetConfigContent('dc_system_agent.config', 'server_control_port='))
+
+# 获得本机的网关正则表达式
+test_rule=getFileTargetConfigContent('dc_system_agent.config', 'netgateRe=')
+local_address = getlocaladdress(test_rule)
 # 获得本机的计算机名称
 compute_name=socket.getfqdn(socket.gethostname())
-
-# 初始化控件放在服务器的地址
-target_agent_address = "C:/dc_system/packages"
-
-# 文件服务器地址
-fileserver_address='192.168.11.117:5000'
-# 服务器地址
-server_address='192.168.11.117:5001'
 
 # 循环检测以及重连的间隔时间
 time_load=5
@@ -52,7 +66,7 @@ while True:
                 for plugin in plugins_update:
 
                     # 更新下载控件的方法
-                    fc = FileDownClass('http://'+str(fileserver_address)+'/' + str(plugin), target_agent_address, plugin)
+                    fc = FileDownClass('http://'+str(fileserver_address)+'/' + str(plugin), target_agent_path, plugin)
                     fc.execute()
                     print('plugin of '+str(plugin)+' update successfully!')
 
@@ -94,7 +108,7 @@ while True:
                 print(str(single_plugin)+' has '+str(single_config)+' need to be loaded...')
 
                 # 读取文件的所有信息
-                file_path=target_agent_address+r'/'+str(single_plugin)+r'/'+str(single_config)
+                file_path=target_agent_path+r'/'+str(single_plugin)+r'/'+str(single_config)
                 f = open(str(file_path), encoding='utf-8')
                 config_messages = f.readlines()
 
@@ -121,7 +135,7 @@ while True:
 
             # 获得的应该是一个字典类型  key为控件加文件名的组合 value为文件内容(列表格式)
             for single_config_name,single_config_data in plugins_config_Data.items():
-                target_config_file_path=target_agent_address+r'/'+str(single_config_name)
+                target_config_file_path=target_agent_path+r'/'+str(single_config_name)
 
                 print(str(target_config_file_path)+'has been updated')
 

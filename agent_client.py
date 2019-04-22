@@ -1,3 +1,4 @@
+import os
 import time
 
 from sqlalchemy import create_engine
@@ -48,7 +49,18 @@ class agent:
             all_exist_plugins.append(single_agent_plugin.dc_pluginsituation_name)
 
         all_plugins = self.session.query(dc_plugin).all()
-        for single_plugin in all_plugins:
+
+        all_checked_plugins=[]
+        # 查找一下控件是否存在
+        for single_unchecked_plugin in all_plugins:
+            # 这是存在的情况
+            if os.path.exists(single_unchecked_plugin.dc_plugin_location):
+                all_checked_plugins.append(single_unchecked_plugin)
+            else:
+                # 这是不存在的情况
+                print('文件'+str(single_unchecked_plugin.dc_plugin_name)+'不存在')
+
+        for single_plugin in all_checked_plugins:
             # 查看每一个控件，这个agent地址是否有对应的控件与其匹配
             if single_plugin.dc_plugin_name not in all_exist_plugins:
                 # 没有就新增
@@ -199,26 +211,33 @@ class agent:
 
         # 找到该IP下面的agent
         target_agent = self.session.query(dc_agent).filter(dc_agent.dc_agent_address == agent_ipaddress).first()
-        if target_agent.dc_agent_operate!='empty':
 
-            # 获取操作动作
-            action_data=target_agent.dc_agent_operate
+        if target_agent:
+            if target_agent.dc_agent_operate!='empty':
 
-            # 置为空
-            target_agent.dc_agent_operate='empty'
-            self.session.flush()
-            self.session.commit()
-            return action_data
+                # 获取操作动作
+                action_data=target_agent.dc_agent_operate
+
+                # 置为空
+                target_agent.dc_agent_operate='empty'
+                self.session.flush()
+                self.session.commit()
+                return action_data
+            else:
+                return 'empty'
         else:
-            return 'empty'
+            print("****************  can't find the target client  *****************")
 
     # 表明客户端程序同服务端响应完成
     def post_agent_reaction_done(self, agent_ipaddress):
         # 找到该IP下面的agent
         target_agent = self.session.query(dc_agent).filter(dc_agent.dc_agent_address == agent_ipaddress).first()
-        target_agent.dc_agent_ServerStatus='no'
-        self.session.flush()
-        self.session.commit()
+
+        # 不为空才往下走
+        if target_agent:
+            target_agent.dc_agent_ServerStatus='no'
+            self.session.flush()
+            self.session.commit()
 
     # 完成配置文件的服务端以及客户端连接操作
     def configs_done_reaction(self, agent_ipaddress):
@@ -268,6 +287,10 @@ class agent:
 
         # 将上次访问时间改为当前时间
         target_agent.dc_agent_LastConnectTime=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+        print('当前时间为：')
+        print(str(target_agent.dc_agent_LastConnectTime))
+
         self.session.flush()
         self.session.commit()
 

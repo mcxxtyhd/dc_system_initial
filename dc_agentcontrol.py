@@ -47,10 +47,21 @@ while True:
         param_init={'agent_address':str(local_address),'agent_name': str(compute_name)}
         # 制定的wepapi地址
         url_init = 'http://'+str(server_address)+'/initAgentPluginsSituation'
+
         # 携带参数调用api
         result_init = requests.post(url_init,data=param_init)
 
         while True:
+
+            # # *****************************    0.5、更新客户端的“上次响应时间”(避免响应过慢)       *************************************
+
+            # 之后调用另外一个接口对该agent的数据进行更改
+            agent_updatetime_address = {'agent_address': str(local_address)}
+            # 指定的wepapi地址
+            url_updatetime = 'http://' + str(server_address) + '/updateAgentRequestTime'
+            # 携带参数调用api
+            result_agent_updatetime = requests.post(url_updatetime, data=agent_updatetime_address)
+
 
             # *****************************    1、检查是否需要更新控件包       *************************************
             print('checking all plugins if need update...')
@@ -111,6 +122,9 @@ while True:
                 file_path=target_agent_path+r'/'+str(single_plugin)+r'/'+str(single_config)
                 f = open(str(file_path), encoding='utf-8')
                 config_messages = f.readlines()
+
+                # 关闭文件
+                f.close()
 
                 # 调用接口将此文件的数据保存至对应的文件
                 # 1.AddressIP 2.配置文件id  3.控件名称 4.配置文件名称

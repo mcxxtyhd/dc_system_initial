@@ -13,6 +13,7 @@ app = Flask(__name__)
 # 从配置文件获取对应的网关正则表达式信息
 local_address = getFileTargetConfigContent('server.config', 'localhost_address=')
 # 获取数据库相关信息
+databaseaddress=getFileTargetConfigContent('server.config', 'database_address=')
 databasename=getFileTargetConfigContent('server.config', 'databasename=')
 databaseport=getFileTargetConfigContent('server.config', 'databaseport=')
 databaseuser=getFileTargetConfigContent('server.config', 'databaseuser=')
@@ -21,7 +22,7 @@ databasepassword=getFileTargetConfigContent('server.config', 'databasepassword='
 target_agent_address = getFileTargetConfigContent('server.config', 'download_path=')
 server_control_port = getFileTargetConfigContent('server.config', 'server_control_port=')
 
-theo = agent(local_address,databaseport,databasename,databaseuser,databasepassword)
+theo = agent(databaseaddress,databaseport,databasename,databaseuser,databasepassword)
 
 # 1.1 初始化客户端的控件情况数据
 @app.route("/initAgentPluginsSituation", methods=["POST"])

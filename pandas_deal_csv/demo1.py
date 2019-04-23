@@ -1,5 +1,7 @@
 import pandas as pd
+from sqlalchemy import create_engine
 
+from decorator.timekill import clock
 
 path = 'formativetableprimarykey_fourthtry.csv'
 
@@ -7,7 +9,7 @@ f = open(path)
 
 data = pd.read_csv(path, sep=',',engine = 'python',iterator=True)
 loop = True
-chunkSize = 10000
+chunkSize = 2000
 chunks = []
 index=0
 while loop:
@@ -22,8 +24,13 @@ while loop:
         print("Iteration is stopped.")
 print('开始合并')
 
-n=0
-for single in chunks:
-    print(single)
-    n+=1
-    print('this is '+str(n))
+
+engine = create_engine('mssql+pymssql://sa:123@localhost:1434/testPythonDatabase?charset=utf8')
+
+@clock
+def testmethod():
+    for single in chunks:
+
+        single.to_sql(name='cleaningdata', con=engine, if_exists='append', index=False)
+
+testmethod()
